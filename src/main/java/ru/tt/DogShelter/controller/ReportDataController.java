@@ -8,11 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.tt.DogShelter.listener.TelegramBotUpdatesListener;
+import ru.tt.DogShelter.model.ReportData;
+import ru.tt.DogShelter.service.ReportDataService;
 
+import java.util.Collection;
+
+@RestController
+@RequestMapping("photoReports")
 public class ReportDataController {
-    @RestController
-    @RequestMapping("photoReports")
-    public class ReportDataController {
 
         private final ReportDataService reportDataService;
         @Autowired
@@ -65,4 +69,3 @@ public class ReportDataController {
         }
 
     }
-}

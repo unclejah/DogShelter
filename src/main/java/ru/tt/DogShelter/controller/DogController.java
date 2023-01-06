@@ -2,6 +2,10 @@ package ru.tt.DogShelter.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
+import ru.tt.DogShelter.model.Dog;
+import ru.tt.DogShelter.service.DogService;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("dog")
@@ -31,7 +35,7 @@ public class DogController {
         return service.update(dog);
     }
 
-    @Operation(summary = "Удаленеи собаки по id")
+    @Operation(summary = "Удаление собаки по id")
     @DeleteMapping("{id}")
     public void remove(@PathVariable Long id) {
         service.removeById(id);
