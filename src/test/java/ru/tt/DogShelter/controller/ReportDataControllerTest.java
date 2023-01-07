@@ -2,7 +2,6 @@ package ru.tt.DogShelter.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -66,7 +65,7 @@ class ReportDataControllerTest {
     void testDownloadAvatarFromFile() throws Exception {
         String fileType = "image/jpeg";
         ReportData reportData = new ReportData();
-        reportData.setFilePath("src/test/java/pro/sky/GroupWorkJava/controller/pet.jpeg");
+        reportData.setFilePath("src/test/java/ru/tt/DogShelter/controller/pet.jpeg");
 
         InputStream is = getClass().getClassLoader().getResourceAsStream("pet.jpeg");
         byte[] data = Objects.requireNonNull(is).readAllBytes();

@@ -79,8 +79,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private KeyBoardShelter keyBoardShelter;
     @Autowired
     private ReportDataService reportDataService;
-    @Autowired
-    private TelegramBot telegramBot;
+    private final TelegramBot telegramBot;
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
@@ -91,7 +90,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
-    private boolean isCat = false;
+
 
     @Override
     public int process(List<Update> updates) {
@@ -154,7 +153,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                     case "\uD83D\uDC36 DOG":
 
-                        isCat = false;
                         keyBoardShelter.sendMenu(chatId);
                         sendMessage(chatId, "Вы выбрали собаку, ГАВ:D");
                         break;

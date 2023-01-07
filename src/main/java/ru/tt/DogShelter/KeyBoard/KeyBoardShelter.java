@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import com.vdurmont.emoji.EmojiParser;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class KeyBoardShelter {
     @Autowired
     private TelegramBot telegramBot;
 
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+    private Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
 
     /**
