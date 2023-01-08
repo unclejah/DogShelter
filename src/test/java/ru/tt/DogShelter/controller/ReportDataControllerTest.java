@@ -1,21 +1,26 @@
 package ru.tt.DogShelter.controller;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.tt.DogShelter.model.PersonDog;
 import ru.tt.DogShelter.model.ReportData;
 import ru.tt.DogShelter.service.ReportDataService;
-
+import ru.tt.DogShelter.listener.TelegramBotUpdatesListener;
 import java.io.*;
+import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ReportDataController.class)
@@ -27,6 +32,8 @@ class ReportDataControllerTest {
     @MockBean
     private ReportDataService reportDataService;
 
+    @MockBean
+    private TelegramBotUpdatesListener TelegramBotUpdatesListener;
     @Test
     void downloadReport() throws Exception {
         String ration = "good ration";
@@ -61,21 +68,22 @@ class ReportDataControllerTest {
         verify(reportDataService).findById(1L);
     }
 
+
     @Test
-    void testDownloadAvatarFromFile() throws Exception {
-        String fileType = "image/jpeg";
-        ReportData reportData = new ReportData();
-        reportData.setFilePath("src/test/java/ru/tt/DogShelter/controller/pet.jpeg");
-
-        InputStream is = getClass().getClassLoader().getResourceAsStream("pet.jpeg");
-        byte[] data = Objects.requireNonNull(is).readAllBytes();
-
-        when(reportDataService.findById(anyLong())).thenReturn(reportData);
+    void remove() throws Exception {
         mockMvc.perform(
-                        get("/photoReports/{id}/photo-from-file", 1L))
-                .andExpect(status().isOk())
-                .andExpect(content().bytes(data))
-                .andExpect(content().contentType(fileType));
-        verify(reportDataService).findById(1L);
+                        delete("/photoReports/{id}", 1))
+                .andExpect(status().isOk());
+        verify(reportDataService).remove(1L);
     }
+
+    @Test
+    void getAll() throws Exception {
+        when(reportDataService.getAll()).thenReturn(List.of(new ReportData()));
+
+        mockMvc.perform(
+                        get("/photoReports/getAll"))
+                .andExpect(status().isOk());
+    }
+
 }
