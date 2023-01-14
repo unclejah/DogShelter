@@ -49,4 +49,5 @@ public class DogService {
         logger.info("Was invoked method to get all dogs");
         return repository.findAll();
     }
+
 }
