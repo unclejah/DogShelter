@@ -20,7 +20,6 @@ public class KeyBoardShelter {
 
     private Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
-
     /**
      * Меню выбора
      *
@@ -29,9 +28,11 @@ public class KeyBoardShelter {
 
     public void chooseMenu(long chatId) {
         logger.info("Method sendMessage has been run: {}, {}", chatId, "Вызвано меню выбора ");
-        String emoji_dog = EmojiParser.parseToUnicode(":dog:");
+        String emojiCat = EmojiParser.parseToUnicode(":cat:");
+        String emojiDog = EmojiParser.parseToUnicode(":dog:");
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton(emoji_dog + " DOG"));
+                new KeyboardButton(emojiCat + " CAT"));
+        replyKeyboardMarkup.addRow(new KeyboardButton(emojiDog + " DOG"));
 
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите, кого хотите приютить:");
     }
