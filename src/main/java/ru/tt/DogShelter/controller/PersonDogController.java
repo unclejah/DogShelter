@@ -2,9 +2,12 @@ package ru.tt.DogShelter.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
+import ru.tt.DogShelter.model.PersonDog;
+import ru.tt.DogShelter.service.PersonDogService;
 
-public class PersonDogController {
-    @RestController
+import java.util.Collection;
+
+@RestController
     @RequestMapping("person-dog")
     public class PersonDogController {
 
@@ -47,4 +50,3 @@ public class PersonDogController {
             return service.getAll();
         }
     }
-}
