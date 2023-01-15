@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.tt.DogShelter.KeyBoard.KeyBoardShelter;
+import ru.tt.DogShelter.model.PersonCat;
 import ru.tt.DogShelter.model.PersonDog;
+import ru.tt.DogShelter.repository.PersonCatRepository;
 import ru.tt.DogShelter.repository.PersonDogRepository;
 import ru.tt.DogShelter.repository.ReportDataRepository;
 import ru.tt.DogShelter.service.ReportDataService;
@@ -45,6 +47,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             "Контактные данные \nhttps://yandex.ru\n" +
             "Общие рекомендации \nhttps://ru.wikipedia.org\n" +
             "";
+    private static final String infoAboutShelterCat = "Наш сайт с информацией о приюте для кошек \nhttps://google.com \n" +
+            "Контактные данные \nhttps://yandex.ru\n" +
+            "Общие рекомендации \nhttps://ru.wikipedia.org\n" +
+            "";
     private static final String infoAboutDogs = "Правила знакомства с животным \nhttps://google.com \n" +
             "Список документов \nhttps://yandex.ru\n" +
             "Список рекомендаций \nhttps://ru.wikipedia.org\n" +
@@ -52,6 +58,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             "Прочая информация \nhttps://google.com\n" +
             "";
 
+    private static final String infoAboutCats = "Правила знакомства с животным \nhttps://google.com \n" +
+            "Список документов \nhttps://yandex.ru\n" +
+            "Список рекомендаций \nhttps://ru.wikipedia.org\n" +
+            "Прочая информация \nhttps://google.com\n" +
+            "";
     private static final String infoContactsVolonter = "Контактные данные волонтера  \n@thepro545 \n" +
             "Телефон - +7 999 999 99 99 \n";
     private static final String infoAboutReport = "Для отчета нужна следующая информация:\n" +
@@ -76,10 +87,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private PersonDogRepository personDogRepository;
     @Autowired
+    private PersonCatRepository personCatRepository;
+    @Autowired
     private KeyBoardShelter keyBoardShelter;
     @Autowired
     private ReportDataService reportDataService;
-    private final TelegramBot telegramBot;
+    @Autowired
+    private TelegramBot telegramBot;
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
@@ -90,13 +104,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
-
+    private boolean isCat = false;
 
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
-            // Process your updates here
             String nameUser = update.message().chat().firstName();
             String textUpdate = update.message().text();
             Integer messageId = update.message().messageId();
@@ -151,8 +164,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         keyBoardShelter.chooseMenu(chatId);
                         break;
 
+                    case "\uD83D\uDC31 CAT":
+                        isCat = true;
+                        keyBoardShelter.sendMenu(chatId);
+                        sendMessage(chatId, "Вы выбрали кошку, МЯУ:D");
+                        break;
                     case "\uD83D\uDC36 DOG":
-
+                        isCat = false;
                         keyBoardShelter.sendMenu(chatId);
                         sendMessage(chatId, "Вы выбрали собаку, ГАВ:D");
                         break;
@@ -164,10 +182,21 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         keyBoardShelter.sendMenuInfoShelter(chatId);
                         break;
                     case "Информация о приюте":
+                        if (isCat) {
+                            sendMessage(chatId, infoAboutShelterCat);
+                        } else {
                             sendMessage(chatId, infoAboutShelterDog);
+                        }
                         break;
                     case "Советы и рекомендации":
+                        if (isCat) {
+                            sendMessage(chatId, infoAboutCats);
+                            ;
+                            break;
+                        } else {
                             sendMessage(chatId, infoAboutDogs);
+                            break;
+                        }
                     case "Прислать отчет о питомце":
                         sendMessage(chatId, infoAboutReport);
                         sendMessage(chatId, reportExample);
@@ -235,23 +264,28 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             long finalChatId = update.message().chat().id();
             var sortChatId = personDogRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
                     .collect(Collectors.toList());
+            var sortChatIdCat = personCatRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
+                    .collect(Collectors.toList());
 
-
-            if (!sortChatId.isEmpty()) {
+            if (!sortChatId.isEmpty() || !sortChatIdCat.isEmpty()) {
                 sendMessage(finalChatId, "Вы уже в базе");
                 return;
             }
             if (lastName != null) {
                 String name = firstName + " " + lastName + " " + username;
-
+                if(isCat){
+                    personCatRepository.save(new PersonCat(name, phone, finalChatId));
+                } else {
                     personDogRepository.save(new PersonDog(name, phone, finalChatId));
-
+                }
                 sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
                 return;
             }
-
+            if (isCat) {
+                personCatRepository.save(new PersonCat(firstName, phone, finalChatId));
+            } else {
                 personDogRepository.save(new PersonDog(firstName, phone, finalChatId));
-
+            }
             sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
             // Сообщение в чат волонтерам
             sendMessage(telegramChatVolunteers, phone + " " + firstName + " Добавил(а) свой номер в базу");
@@ -272,7 +306,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
             try {
                 File file = getFileResponse.file();
-                file.fileSize();
+//                file.fileSize();
                 String fullPathPhoto = file.filePath();
 
                 long timeDate = update.message().date();

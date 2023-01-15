@@ -15,6 +15,21 @@ create table personDog
     FOREIGN KEY (id) REFERENCES reportData (person_id)
 );
 
+create table personCat
+(
+    id            integer PRIMARY KEY not null,
+    "name"        varchar(30)         not null,
+    year_of_birth integer             not null,
+    phone         varchar             not null,
+    mail          varchar             not null,
+    address       varchar             not null,
+    chat_id       integer             not null,
+    cat_id        integer             not null,
+    status        varchar(30)         not null,
+    FOREIGN KEY (id) REFERENCES reportData (person_id)
+);
+
+
 create table dog
 (
     id            integer PRIMARY KEY not null,
