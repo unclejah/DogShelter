@@ -2,6 +2,7 @@ package ru.tt.DogShelter.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.tt.DogShelter.exceptions.CatNotFoundException;
 import ru.tt.DogShelter.model.Cat;
@@ -11,11 +12,10 @@ import java.util.Collection;
 
 @Service
 public class CatService {
-
     private final CatRepository repository;
 
     private final Logger logger = LoggerFactory.getLogger(CatService.class);
-
+    @Autowired
     public CatService(CatRepository repository) {
         this.repository = repository;
     }

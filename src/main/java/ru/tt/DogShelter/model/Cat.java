@@ -9,6 +9,14 @@ import java.util.Objects;
 @Entity
 public class Cat {
 
+    public Cat(Long id, String breed, String name, int yearOfBirth, String description) {
+        this.id = id;
+        this.breed = breed;
+        this.name = name;
+        this.yearOfBirth = yearOfBirth;
+        this.description = description;
+    }
+
     @Id
     @GeneratedValue
     private Long id;
