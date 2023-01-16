@@ -55,3 +55,13 @@ create table reportData
     lastMessage date                not null,
     data        bytea               not null
 );
+
+create table cat
+(
+    id            integer PRIMARY KEY not null,
+    breed         varchar             not null,
+    "name"        varchar             not null,
+    year_of_birth integer             not null,
+    description   varchar,
+    FOREIGN KEY (id) REFERENCES personCat (cat_id)
+);
