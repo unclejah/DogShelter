@@ -1,13 +1,24 @@
 package ru.tt.DogShelter.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 
+
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
+
 
 @Entity
 public class Cat {
+
+    public Cat(Long id, String breed, String name, int yearOfBirth, String description) {
+        this.id = id;
+        this.breed = breed;
+        this.name = name;
+        this.yearOfBirth = yearOfBirth;
+        this.description = description;
+    }
 
     @Id
     @GeneratedValue
