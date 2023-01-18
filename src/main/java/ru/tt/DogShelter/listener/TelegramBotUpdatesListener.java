@@ -79,7 +79,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             "(Самочувствие:)(\\s)(\\W+)(;)\n" +
             "(Поведение:)(\\s)(\\W+)(;)";
 
-    private static final long telegramChatVolunteers = -748879962L;
+    private static final long telegramChatVolunteers = 0;
 
     private long daysOfReports;
     @Autowired
