@@ -3,7 +3,7 @@ package ru.tt.DogShelter.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
